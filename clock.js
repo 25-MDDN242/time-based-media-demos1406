@@ -1,6 +1,126 @@
 /*
  * use p5.js to draw a clock on a 960x500 canvas
  */
+
+let bg
+let tree
+let shadow
+
+let leaf1
+let leaf2
+let leaf3
+let leaf4
+
+let rock1
+let rock2
+let rock3
+let rock4
+
+let bushA1
+let bushA2
+let bushB1
+let bushB2
+
+let cowboy
+let cowboy2
+
+let leavesBehindTree = []
+let leavesFrontOfTree = []
+let idleRight = true
+let offsett
+
+let western
+let yoster
+
+function preload(){
+  bg = loadImage("assets/b.png")
+  tree = loadImage("assets/tree trunk.png")
+  shadow = loadImage("assets/shadow.png")
+  
+  leaf1 = loadImage("assets/leaf1.png")
+  leaf2 = loadImage("assets/leaf2.png")
+  leaf3 = loadImage("assets/leaf3.png")
+  leaf4 = loadImage("assets/leaf4.png")
+
+  rock1 = loadImage("assets/rock1.png")
+  rock2 = loadImage("assets/rock2.png")
+  rock3 = loadImage("assets/rock3.png")
+  rock4 = loadImage("assets/rock4.png")
+
+  bushA1 = loadImage("assets/bushA1.png")
+  bushA2 = loadImage("assets/bushA2.png")
+  bushB1 = loadImage("assets/bushB1.png")
+  bushB2 = loadImage("assets/bushB2.png")
+
+  cowboy = loadImage("assets/cowboy.png")
+  cowboy2 = loadImage("assets/cowboy2.png")
+
+  western = loadFont("assets/Pixel-Western.ttf")
+  yoster = loadFont("assets/yoster.ttf")
+
+  leavesBehindTree = [
+    { img: leaf4, x: 220, y: 280 },
+    { img: leaf4, x: 250, y: 275 },
+    { img: leaf3, x: 230, y: 295 },
+
+    { img: leaf3, x: 275, y: 240 },
+    { img: leaf3, x: 240, y: 215 },
+
+    { img: leaf4, x: 60, y: 355 },
+    { img: leaf4, x: 30, y: 320 },
+    { img: leaf4, x: 85, y: 310 },
+
+    { img: leaf4, x: 215, y: 175 },
+    { img: leaf4, x: 180, y: 170 },
+  ];
+
+  leavesFrontOfTree = [
+    { img: leaf3, x: 235, y: 280 },
+
+    { img: leaf2, x: 250, y: 230 },
+    { img: leaf1, x: 280, y: 225 },
+    { img: leaf1, x: 265, y: 205 },
+
+    { img: leaf3, x: 75, y: 340 },
+    { img: leaf3, x: 60, y: 315 },
+    { img: leaf2, x: 40, y: 340 },
+    { img: leaf1, x: 80, y: 295 },
+    { img: leaf1, x: 45, y: 300 },
+
+    { img: leaf4, x: 125, y: 275 },
+    { img: leaf4, x: 145, y: 265 },
+    { img: leaf4, x: 155, y: 250 },
+    { img: leaf3, x: 160, y: 265 },
+    { img: leaf3, x: 115, y: 250 },
+    { img: leaf2, x: 140, y: 235 },
+
+    { img: leaf4, x: 75, y: 215 },
+    { img: leaf4, x: 90, y: 190 },
+    { img: leaf2, x: 50, y: 175 },
+    { img: leaf3, x: 55, y: 220 },
+    { img: leaf3, x: 80, y: 180 },
+    { img: leaf2, x: 80, y: 200 },
+    { img: leaf1, x: 45, y: 195 },
+    { img: leaf1, x: 70, y: 170 },
+
+    { img: leaf3, x: 200, y: 165 },
+    { img: leaf2, x: 185, y: 150 },
+    { img: leaf2, x: 235, y: 160 },
+    { img: leaf1, x: 205, y: 135 },
+
+    { img: leaf4, x: 140, y: 180 },
+    { img: leaf4, x: 125, y: 130 },
+    { img: leaf3, x: 125, y: 170 },
+    { img: leaf3, x: 150, y: 150 },
+    { img: leaf3, x: 105, y: 140 },
+    { img: leaf2, x: 130, y: 145 },
+    { img: leaf2, x: 165, y: 130 },
+    { img: leaf1, x: 145, y: 120 },
+    { img: leaf1, x: 180, y: 110 },
+  ];
+}
+
+
 function draw_clock(obj) {
   // draw your own clock here based on the values of obj:
   //    obj.hours goes from 0-23
@@ -11,18 +131,113 @@ function draw_clock(obj) {
   //        < 0 if no alarm is set
   //        = 0 if the alarm is currently going off
   //        > 0 --> the number of seconds until alarm should go off
-  background(50); //  beige
-  fill(200); // dark grey
-  textSize(40);
-  textAlign(CENTER, CENTER);
-  text("YOUR MAIN CLOCK CODE GOES HERE", width / 2, 200);
+
+  // load background image
+  image(bg, 0, 0)
+
+  ///////////////////////////////////////////////////////
+  ///////////////////// ROCKS ///////////////////////////
+
+  image(rock1, 350, 200)
+  image(rock2, 400, 200)
+  image(rock3, 450, 200)
+  image(rock4, 500, 200)
+
+  image(bushA1, 550, 200)
+  image(bushA2, 600, 200)
+
+  if(idleRight){
+    image(bushA1, 85, 395)
+    image(bushB1, 60, 405)
+  }else{
+    image(bushA2, 85, 395)
+    image(bushB2, 60, 405)
+  }
+
+  // image(bushA1, 80, 395)
+  
+
+  image(rock4, 75, 440)
+
+  /////////////////// END OF ROCKS //////////////////////
+  ///////////////////////////////////////////////////////
+
+  ///////////////////////////////////////////////////////
+  ///////////////////// TREE ////////////////////////////
+
+  // LEAVES BEHIND THE TREE
+  for (let i = 0; i < leavesBehindTree.length; i++) {
+    if (idleRight) {
+      offset = 5;
+    } else {
+      offset = 0;
+    }
+    image(leavesBehindTree[i].img, leavesBehindTree[i].x + offset, leavesBehindTree[i].y)
+  }
+
+  // DRAW THE TREE'S SHADOW
+  tint(150,150)
+  image(shadow, 0, 10)  
+  tint(255,255)
+
+  // DRAW THE TREE TRUNK
+  image(tree, 0, 10)
+
+  image(rock2, 45, 440)
+  image(rock4, 75, 440)
 
 
-  fill(249, 140, 255);// pink
-  ellipse(width / 3, 350, 150);
-  fill(140, 255, 251) // blue
-  ellipse(width / 2, 350, 150);
-  fill(175, 133, 255); // purple
-  ellipse(width / 3 * 2, 350, 150);
+  // LEAVES IN FRONT OF THE TREE
+  for (let i = 0; i < leavesFrontOfTree.length; i++) {
+    if (idleRight) {
+      offset = 5;
+    } else {
+      offset = 0;
+    }
+    image(
+      leavesFrontOfTree[i].img,
+      leavesFrontOfTree[i].x + offset,
+      leavesFrontOfTree[i].y
+    );
+  }
 
+  // MOVE THE LEAVES EVERY 30 FRAMES (0.5 seconds)
+  if (frameCount % 30 === 0) {
+    idleRight = !idleRight;
+  }
+
+  /////////////////// END OF TREE ///////////////////////
+  ///////////////////////////////////////////////////////
+
+  ///////////////////////////////////////////////////////
+  //////////////////// COWBOY ///////////////////////////
+
+  // COWBOY HITBOX PARAMETERS
+  let xMin = 190, xMax = 210, yMin = 390, yMax = 410;
+  noStroke()
+  fill("red");
+  rect(xMin, yMin, xMax - xMin, xMax - xMin);
+
+  // DRAW THE COWBOY
+  // if the mouse is clicked on the hitbox, animation will speed up and he will speak
+  if(mouseIsPressed == true && mouseX > xMin && mouseX < xMax && mouseY > yMin && mouseY < yMax){
+    if (Math.floor(frameCount / 10) % 2 === 0) {
+      image(cowboy, 165, 370);
+    } else {
+      image(cowboy2, 165, 375);
+    }
+      fill("black")
+      textFont(yoster, 20);
+      text("ZzzZzz...", 230, 370);
+
+  } else{ // else he will endlessly loop his idle animation
+    if (Math.floor(frameCount / 40) % 2 === 0) {
+      image(cowboy, 165, 370);
+    } else {
+      image(cowboy2, 165, 375);
+    }
+  }
+
+  ////////////////// END OF COWBOY //////////////////////
+  ///////////////////////////////////////////////////////
 }

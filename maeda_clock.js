@@ -49,4 +49,5 @@ function draw_clock(obj) {
     sizeMin -= speed
   }
 
+  
 }
