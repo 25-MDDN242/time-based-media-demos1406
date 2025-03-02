@@ -2,40 +2,37 @@
  * use p5.js to draw a clock on a 960x500 canvas
  */
 
-let bg
-let tree
-let shadow
 
-let leaf1
-let leaf2
-let leaf3
-let leaf4
+/// SPRITES
+let bg, clouds, cloudsX, tree, shadow;
 
-let rock1
-let rock2
-let rock3
-let rock4
+let train1, train2, train3, trainX;
 
-let bushA1
-let bushA2
-let bushB1
-let bushB2
+let leaf1, leaf2, leaf3, leaf4;
 
-let cowboy
-let cowboy2
+let rock1, rock2, rock3, rock4;
 
+let bushA1, bushA2, bushB1, bushB2;
+
+let cowboy, cowboy2;
+
+/// VARIABLES
 let leavesBehindTree = []
 let leavesFrontOfTree = []
 let idleRight = true
 let offsett
 
+/// FONTS
 let western
 let yoster
 
 function preload(){
-  bg = loadImage("assets/b.png")
+  /// LOAD SPRITES
+  bg = loadImage("assets/bg.png")
   tree = loadImage("assets/tree trunk.png")
   shadow = loadImage("assets/shadow.png")
+  clouds = loadImage("assets/clouds.png")
+  cloudsX = 0
   
   leaf1 = loadImage("assets/leaf1.png")
   leaf2 = loadImage("assets/leaf2.png")
@@ -52,12 +49,19 @@ function preload(){
   bushB1 = loadImage("assets/bushB1.png")
   bushB2 = loadImage("assets/bushB2.png")
 
+  train1 = loadImage("assets/train1.png")
+  train2 = loadImage("assets/train2.png")
+  train3 = loadImage("assets/train3.png")
+  trainX = width
+
   cowboy = loadImage("assets/cowboy.png")
   cowboy2 = loadImage("assets/cowboy2.png")
 
+  /// LOAD FONTS
   western = loadFont("assets/Pixel-Western.ttf")
   yoster = loadFont("assets/yoster.ttf")
 
+  /// SET UP LEAVES
   leavesBehindTree = [
     { img: leaf4, x: 220, y: 280 },
     { img: leaf4, x: 250, y: 275 },
@@ -133,7 +137,40 @@ function draw_clock(obj) {
   //        > 0 --> the number of seconds until alarm should go off
 
   // load background image
+  background("#70b3b2")
+
+
+  image(clouds, cloudsX, -10)
+  image(clouds, cloudsX + clouds.width, -10)
+
+  cloudsX -= 0.2
+
+  // reset cloudsX
+  if(cloudsX < -clouds.width){
+    cloudsX = 0
+  }
+
   image(bg, 0, 0)
+
+  ///////////////////////////////////////////////////////
+  ///////////////////// TRAIN ///////////////////////////
+
+
+  if(idleRight){
+    image(train3, trainX, 145);
+  }else{
+    image(train1, trainX, 140);
+  }
+
+  trainX -= 0.7
+
+  if (trainX < -train1.width) {
+    trainX = width + train1.width;
+  }
+
+
+  /////////////////// END OF TRAIN ///////////////////////
+  ///////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////
   ///////////////////// ROCKS ///////////////////////////
@@ -230,7 +267,7 @@ function draw_clock(obj) {
       textFont(yoster, 20);
       text("ZzzZzz...", 230, 370);
 
-  } else{ // else he will endlessly loop his idle animation
+  } else{ // else: he will endlessly loop his idle animation
     if (Math.floor(frameCount / 40) % 2 === 0) {
       image(cowboy, 165, 370);
     } else {
