@@ -6,7 +6,8 @@
 /// SPRITES
 let bg, clouds, cloudsX, tree, shadow;
 
-let train1, train2, train3, trainX;
+let train1, train2, train3
+let trainX = 900
 
 let leaf1, leaf2, leaf3, leaf4;
 
@@ -155,18 +156,27 @@ function draw_clock(obj) {
   ///////////////////////////////////////////////////////
   ///////////////////// TRAIN ///////////////////////////
 
+  // up and down animation
+  // if(idleRight){
+  //   image(train3, trainX, 145);
+  // }else{
+  //   image(train1, trainX, 140);
+  // }
 
-  if(idleRight){
-    image(train3, trainX, 145);
-  }else{
-    image(train1, trainX, 140);
-  }
+  // image(train1, trainX, 140)
+  
 
-  trainX -= 0.7
+  // callTrain(train1, 960, 140)
 
-  if (trainX < -train1.width) {
-    trainX = width + train1.width;
-  }
+
+  callTrain(train1, 0, 140, -0.5)
+  // trainX -= 0.5
+
+
+  // resets train back to the left:
+  // if (trainX < -train1.width) {
+  //   trainX = width + train1.width;
+  // }
 
 
   /////////////////// END OF TRAIN ///////////////////////
@@ -239,8 +249,14 @@ function draw_clock(obj) {
   }
 
   // MOVE THE LEAVES EVERY 30 FRAMES (0.5 seconds)
-  if (frameCount % 30 === 0) {
-    idleRight = !idleRight;
+  // if (frameCount % 30 === 0) {
+  //   idleRight = !idleRight;
+  // }
+
+  if(obj.seconds % 2 == 1){
+    idleRight = true
+  }else{
+    idleRight = false
   }
 
   /////////////////// END OF TREE ///////////////////////
@@ -258,17 +274,21 @@ function draw_clock(obj) {
   // DRAW THE COWBOY
   // if the mouse is clicked on the hitbox, animation will speed up and he will speak
   if(mouseIsPressed == true && mouseX > xMin && mouseX < xMax && mouseY > yMin && mouseY < yMax){
-    if (Math.floor(frameCount / 10) % 2 === 0) {
+    if (obj.millis % 300 < 150) {
       image(cowboy, 165, 370);
     } else {
       image(cowboy2, 165, 375);
     }
       fill("black")
-      textFont(yoster, 20);
-      text("ZzzZzz...", 230, 370);
-
+      textFont(western, 10);
+      if(obj.minutes == 15){
+        text("Reckon a quarter's gone past...", 230, 370);
+      }else{
+        text("ZzzZzzz...", 230, 370);
+      }
+      
   } else{ // else: he will endlessly loop his idle animation
-    if (Math.floor(frameCount / 40) % 2 === 0) {
+    if (obj.seconds %  2 === 0) {
       image(cowboy, 165, 370);
     } else {
       image(cowboy2, 165, 375);
@@ -277,4 +297,11 @@ function draw_clock(obj) {
 
   ////////////////// END OF COWBOY //////////////////////
   ///////////////////////////////////////////////////////
+}
+
+
+function callTrain(callTrainImage, callTrainX, callTrainY, callTrainSpeed){
+  callTrainX += callTrainSpeed
+  image(callTrainImage, callTrainX, callTrainY)
+  
 }
