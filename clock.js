@@ -6,8 +6,7 @@
 /// SPRITES
 let bg, clouds, cloudsX, tree, shadow;
 
-let train1, train2, train3
-let trainX = 900
+let trainUP, trainDOWN, train1, train2, train
 
 let leaf1, leaf2, leaf3, leaf4;
 
@@ -50,10 +49,10 @@ function preload(){
   bushB1 = loadImage("assets/bushB1.png")
   bushB2 = loadImage("assets/bushB2.png")
 
-  train1 = loadImage("assets/train1.png")
-  train2 = loadImage("assets/train2.png")
-  train3 = loadImage("assets/train3.png")
-  trainX = width
+  trainUP = loadImage("assets/trainUP.png")
+  trainDOWN = loadImage("assets/traindowntest.png")
+  train = new Train(trainUP, trainDOWN, 960, 140, 0.5);
+
 
   cowboy = loadImage("assets/cowboy.png")
   cowboy2 = loadImage("assets/cowboy2.png")
@@ -158,21 +157,19 @@ function draw_clock(obj) {
 
   // up and down animation
   // if(idleRight){
-  //   image(train3, trainX, 145);
+  //   train1.move()
+  //   train1.draw()
   // }else{
-  //   image(train1, trainX, 140);
+  //   train2.move()
+  //   train2.draw()
   // }
 
-  // image(train1, trainX, 140)
+  // train arrives every hour
+  if(obj.minutes < 2){
+    train.move()
+    train.draw(obj.millis)
+  }
   
-
-  // callTrain(train1, 960, 140)
-
-
-  callTrain(train1, 0, 140, -0.5)
-  // trainX -= 0.5
-
-
   // resets train back to the left:
   // if (trainX < -train1.width) {
   //   trainX = width + train1.width;
@@ -185,13 +182,13 @@ function draw_clock(obj) {
   ///////////////////////////////////////////////////////
   ///////////////////// ROCKS ///////////////////////////
 
-  image(rock1, 350, 200)
-  image(rock2, 400, 200)
-  image(rock3, 450, 200)
-  image(rock4, 500, 200)
+  // image(rock1, 350, 200)
+  // image(rock2, 400, 200)
+  // image(rock3, 450, 200)
+  // image(rock4, 500, 200)
 
-  image(bushA1, 550, 200)
-  image(bushA2, 600, 200)
+  // image(bushA1, 550, 200)
+  // image(bushA2, 600, 200)
 
   if(idleRight){
     image(bushA1, 85, 395)
@@ -300,8 +297,28 @@ function draw_clock(obj) {
 }
 
 
-function callTrain(callTrainImage, callTrainX, callTrainY, callTrainSpeed){
-  callTrainX += callTrainSpeed
-  image(callTrainImage, callTrainX, callTrainY)
-  
+class Train {
+  constructor(img1, img2, x, y, speed){
+    this.img1 = img1
+    this.img2 = img2
+    this.x = x
+    this.y = y
+    this.speed = speed
+  }
+
+  move(){
+    this.x -= this.speed
+  }
+
+  draw(currentMillis){
+    push()
+    let imgToUse = (currentMillis % 1000 < 500) ? this.img1 : this.img2
+    if(imgToUse == this.img1){
+      image(imgToUse, this.x, this.y)
+    }else if(imgToUse == this.img2){
+      image(imgToUse, this.x, this.y + 5)
+    }
+    pop()
+  }
+
 }
