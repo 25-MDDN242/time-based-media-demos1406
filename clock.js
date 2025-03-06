@@ -4,23 +4,25 @@
 
 
 /// SPRITES
-let bg, clouds, cloudsX, tree, shadow;
+let bg, clouds, cloudsX, tree, shadow
 
 let trainUP, trainDOWN, train1, train2, train
 
-let leaf1, leaf2, leaf3, leaf4;
+let leaf1, leaf2, leaf3, leaf4
 
-let rock1, rock2, rock3, rock4;
+let rock1, rock2, rock3, rock4
 
-let bushA1, bushA2, bushB1, bushB2;
+let bushA1, bushA2, bushB1, bushB2
 
-let cowboy, cowboy2;
+let cowboy, cowboy2
+
+let vulture
 
 /// VARIABLES
 let leavesBehindTree = []
 let leavesFrontOfTree = []
 let idleRight = true
-let offsett
+let offset
 
 /// FONTS
 let western
@@ -53,13 +55,15 @@ function preload(){
   trainDOWN = loadImage("assets/traindowntest.png")
   train = new Train(trainUP, trainDOWN, 960, 140, 0.5);
 
-
   cowboy = loadImage("assets/cowboy.png")
   cowboy2 = loadImage("assets/cowboy2.png")
+
+  vulture = loadImage("assets/vulture.png")
 
   /// LOAD FONTS
   western = loadFont("assets/Pixel-Western.ttf")
   yoster = loadFont("assets/yoster.ttf")
+  blockBlue = loadFont("assets/BlockBlueprint.ttf")
 
   /// SET UP LEAVES
   leavesBehindTree = [
@@ -155,40 +159,24 @@ function draw_clock(obj) {
   ///////////////////////////////////////////////////////
   ///////////////////// TRAIN ///////////////////////////
 
-  // up and down animation
-  // if(idleRight){
-  //   train1.move()
-  //   train1.draw()
-  // }else{
-  //   train2.move()
-  //   train2.draw()
-  // }
-
   // train arrives every hour
-  if(obj.minutes < 2){
+  if(obj.minutes == 47){
     train.move()
     train.draw(obj.millis)
   }
-  
-  // resets train back to the left:
-  // if (trainX < -train1.width) {
-  //   trainX = width + train1.width;
-  // }
 
-
+  if (mouseX > train.getX() && mouseX < train.getX() + 100 &&
+      mouseY > train.getY() && mouseY < train.getY() + 50) {
+      fill("black")
+      textFont(blockBlue, 30);
+      text(obj.hours + "/24", 800, 480)
+  }
   /////////////////// END OF TRAIN ///////////////////////
   ///////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////
   ///////////////////// ROCKS ///////////////////////////
 
-  // image(rock1, 350, 200)
-  // image(rock2, 400, 200)
-  // image(rock3, 450, 200)
-  // image(rock4, 500, 200)
-
-  // image(bushA1, 550, 200)
-  // image(bushA2, 600, 200)
 
   if(idleRight){
     image(bushA1, 85, 395)
@@ -234,15 +222,15 @@ function draw_clock(obj) {
   // LEAVES IN FRONT OF THE TREE
   for (let i = 0; i < leavesFrontOfTree.length; i++) {
     if (idleRight) {
-      offset = 5;
+      offset = 5
     } else {
-      offset = 0;
+      offset = 0
     }
     image(
       leavesFrontOfTree[i].img,
       leavesFrontOfTree[i].x + offset,
       leavesFrontOfTree[i].y
-    );
+    )
   }
 
   // MOVE THE LEAVES EVERY 30 FRAMES (0.5 seconds)
@@ -255,6 +243,7 @@ function draw_clock(obj) {
   }else{
     idleRight = false
   }
+
 
   /////////////////// END OF TREE ///////////////////////
   ///////////////////////////////////////////////////////
@@ -277,7 +266,7 @@ function draw_clock(obj) {
       image(cowboy2, 165, 375);
     }
       fill("black")
-      textFont(western, 10);
+      textFont(blockBlue, 30);
       if(obj.minutes == 15){
         text("Reckon a quarter's gone past...", 230, 370);
       }else{
@@ -291,6 +280,12 @@ function draw_clock(obj) {
       image(cowboy2, 165, 375);
     }
   }
+
+  // vulture test
+  
+  // vulture.resize(0, 98)
+  // image(vulture, 400, 370)
+
 
   ////////////////// END OF COWBOY //////////////////////
   ///////////////////////////////////////////////////////
@@ -308,6 +303,14 @@ class Train {
 
   move(){
     this.x -= this.speed
+  }
+
+  getX(){
+    return this.x
+  }
+
+  getY(){
+    return this.y
   }
 
   draw(currentMillis){
