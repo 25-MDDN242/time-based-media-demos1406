@@ -14,7 +14,9 @@ let rock1, rock2, rock3, rock4
 
 let bushA1, bushA2, bushB1, bushB2
 
-let cowboy, cowboy2
+let tumbleweed, TWshadow
+
+let cowboy, cowboy2, cowboyAnimation
 
 let vulture
 
@@ -50,6 +52,9 @@ function preload(){
   bushA2 = loadImage("assets/bushA2.png")
   bushB1 = loadImage("assets/bushB1.png")
   bushB2 = loadImage("assets/bushB2.png")
+
+  tumbleweed = loadImage("assets/tumbleweed.png")
+  TWshadow = loadImage("assets/tw shadow.png")
 
   trainUP = loadImage("assets/trainUP.png")
   trainDOWN = loadImage("assets/traindowntest.png")
@@ -194,6 +199,20 @@ function draw_clock(obj) {
   /////////////////// END OF ROCKS //////////////////////
   ///////////////////////////////////////////////////////
 
+  angleMode(DEGREES)
+  let secondRotation = map(obj.seconds, 0, 59, 360, 0)
+  let secondMovement = map(obj.seconds, 0, 59, 0, 960)  
+
+  // tint(150,150)
+  // image(TWshadow, secondMovement - 30, 300)
+  // tint(255,255)
+
+  push()
+  translate(secondMovement, 265)
+  rotate(secondRotation)
+  image(tumbleweed, 0, 0)
+  pop()
+
   ///////////////////////////////////////////////////////
   ///////////////////// TREE ////////////////////////////
 
@@ -252,14 +271,22 @@ function draw_clock(obj) {
   //////////////////// COWBOY ///////////////////////////
 
   // COWBOY HITBOX PARAMETERS
-  let xMin = 190, xMax = 210, yMin = 390, yMax = 410;
-  noStroke()
-  fill("red");
-  rect(xMin, yMin, xMax - xMin, xMax - xMin);
+  let xMin = 170, xMax = 220, yMin = 380, yMax = 460
+  // noStroke()
+  // fill("red")
+  // rect(xMin, yMin, xMax - xMin, yMax - yMin)
 
   // DRAW THE COWBOY
-  // if the mouse is clicked on the hitbox, animation will speed up and he will speak
-  if(mouseIsPressed == true && mouseX > xMin && mouseX < xMax && mouseY > yMin && mouseY < yMax){
+  if (mouseIsPressed && mouseX > xMin && mouseX < xMax && mouseY > yMin && mouseY < yMax) {
+    cowboyAnimation = obj.seconds + 3 // Set speed boost to last 3 seconds
+    if(cowboyAnimation == 59){
+      cowboyAnimation -= 59
+    }
+  }
+
+
+  if(obj.seconds >= cowboyAnimation - 3 && obj.seconds < cowboyAnimation
+    || cowboyAnimation < 3 && obj.seconds < cowboyAnimation){ // if the cowboy is speed boosted
     if (obj.millis % 300 < 150) {
       image(cowboy, 165, 370);
     } else {
@@ -268,9 +295,9 @@ function draw_clock(obj) {
       fill("black")
       textFont(blockBlue, 30);
       if(obj.minutes == 15){
-        text("Reckon a quarter's gone past...", 230, 370);
+        text("Reckon a quarter's gone past...", 250, 370);
       }else{
-        text("ZzzZzzz...", 230, 370);
+        text("ZzzZzzz...", 250, 370);
       }
       
   } else{ // else: he will endlessly loop his idle animation
