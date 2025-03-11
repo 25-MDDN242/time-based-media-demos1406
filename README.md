@@ -24,3 +24,5 @@ To think about:
     - Changing the animation style
     - Adding a vulture to be the alarm (or idea can be workshopped)
     - Changing it so just clicking once will reveal the text
+
+07/03/25: I was shocked at how easy it was to code the Tumbleweed sprite so that it moves and rotates according to the second (but it represents the minute). translate() and rotate() were definitely intimidating functions but it was so easy for the tumbleweed to simultaneously rotate about the seconds for a full minute, and then I would move the tumbleweed with translate() and another map using seconds for a full minute again. 

@@ -18,7 +18,7 @@ let tumbleweed, TWshadow
 
 let cowboy, cowboy2, cowboyAnimation
 
-let vulture
+let vulture, vulture2, signpost, vultureAlarm
 
 /// VARIABLES
 let leavesBehindTree = []
@@ -29,6 +29,13 @@ let offset
 /// FONTS
 let western
 let yoster
+
+// VARIABLES FOR FADE EFFECT
+let fadeTextActive = false
+let fadeTextStartTime = 0
+let fadeInDuration = 500
+let steadyDuration = 2000
+let fadeOutDuration = 500
 
 function preload(){
   /// LOAD SPRITES
@@ -53,7 +60,7 @@ function preload(){
   bushB1 = loadImage("assets/bushB1.png")
   bushB2 = loadImage("assets/bushB2.png")
 
-  tumbleweed = loadImage("assets/tumbleweed.png")
+  tumbleweed = loadImage("assets/tumbleweedB.png")
   TWshadow = loadImage("assets/tw shadow.png")
 
   trainUP = loadImage("assets/trainUP.png")
@@ -63,7 +70,10 @@ function preload(){
   cowboy = loadImage("assets/cowboy.png")
   cowboy2 = loadImage("assets/cowboy2.png")
 
-  vulture = loadImage("assets/vulture.png")
+  vulture = loadImage("assets/vultureB.png")
+  vulture2 = loadImage("assets/vultureB2.png")
+  signpost = loadImage("assets/signpost.png")
+  vultureAlarm = loadImage("assets/vulture_animation.gif")
 
   /// LOAD FONTS
   western = loadFont("assets/Pixel-Western.ttf")
@@ -200,7 +210,7 @@ function draw_clock(obj) {
   ///////////////////////////////////////////////////////
 
   angleMode(DEGREES)
-  let secondRotation = map(obj.seconds, 0, 59, 360, 0)
+  let secondRotation = map(obj.seconds, 0, 30, 0, 360)
   let secondMovement = map(obj.seconds, 0, 59, 0, 960)  
 
   // tint(150,150)
@@ -311,11 +321,27 @@ function draw_clock(obj) {
   // vulture test
   
   // vulture.resize(0, 98)
-  // image(vulture, 400, 370)
+  image(signpost, 760, 245)
+  // if(idleRight){ 
+  //   image(vulture, 740, 160)
+  // }else{
+  //   image(vulture2, 740, 165)
+  // }
+  image(vultureAlarm, 720, 140)
 
+  // image(vulture, 230, 370)
 
   ////////////////// END OF COWBOY //////////////////////
   ///////////////////////////////////////////////////////
+
+  // try adding a blue filter to the whole canvas if hour == 13
+  // if(obj.hours == 13){
+  //   fill(40, 55, 102, 100)
+  //   noStroke()
+  //   // alphaLevel(100)
+  //   rect(0, 0, 960, 500)
+  //   // tint(255, 255)
+  // }
 }
 
 
