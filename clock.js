@@ -219,7 +219,7 @@ function draw_clock(obj) {
 
   angleMode(DEGREES);
   let secondRotation = map(obj.seconds, 0, 30, 0, 360);
-  let secondMovement = map(obj.seconds, 0, 59, 0, 960);
+  let secondMovement = map(obj.seconds, 0, 59, -50, 960);
 
   // tint(150,150)
   // image(TWshadow, secondMovement - 30, 300)
