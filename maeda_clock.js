@@ -35,9 +35,6 @@ function draw_clock(obj) {
   textAlign(CENTER, CENTER)
   textFont(blockBlue)
 
-  fill(255, 0, 0)
-  rect(random() * width, random() * height, 5)
-
   hourAlpha = map(hourSize, minSize, maxSize, 50, 255)
   minuteAlpha = map(minuteSize, minSize, maxSize, 50, 255)
 

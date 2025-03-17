@@ -5,6 +5,8 @@
 /// SPRITES
 let bg, clouds, cloudsX, tree, treeShadow;
 
+let star1, star2, sunrise, sunriseTint
+
 let trainUP, trainDOWN, train, steam;
 
 let leaf1, leaf2, leaf3, leaf4;
@@ -18,6 +20,7 @@ let tumbleweed, TWshadow;
 let cowboy, cowboy2, cowboyAnimation;
 
 let vulture, vulture2, signpost, vultureAlarm, signShadow;
+let vultureAnimating, vStart, vEnd, clickCount;
 
 /// VARIABLES
 let leavesBehindTree = [];
@@ -28,21 +31,26 @@ let offset;
 /// FONTS
 let western;
 let yoster;
+let blockBlue
 
 // VARIABLES FOR FADE EFFECT
-let fadeTextActive = false;
-let fadeTextStartTime = 0;
-let fadeInDuration = 500;
-let steadyDuration = 2000;
-let fadeOutDuration = 500;
+let fadeValue = 0
+let fadeDirection = 1
 
 function preload() {
   /// LOAD SPRITES
   bg = loadImage("assets/bg.png");
   tree = loadImage("assets/tree trunk.png");
   treeShadow = loadImage("assets/shadow.png");
-  clouds = loadImage("assets/clouds.png");
-  cloudsX = 0;
+  c = loadImage("assets/clouds.png");
+  s1 = loadImage("assets/star0.png")
+  s2 = loadImage("assets/star1.png")
+  b1 = loadImage("assets/sunrise.png")
+  clouds = new Sky(c, 0, -10);
+  star1 = new Sky(s1, 0, 0)
+  star2 = new Sky(s2, 0, 0)
+  sunrise = new Sky(b1, 0, 0)
+  sunriseTint = color(167, 141, 188)
 
   leaf1 = loadImage("assets/leaf1.png");
   leaf2 = loadImage("assets/leaf2.png");
@@ -75,8 +83,13 @@ function preload() {
   vulture2 = loadImage("assets/vultureB2.png");
   signpost = loadImage("assets/sign.png");
   signShadow = loadImage("assets/signShadow.png");
+  
   vultureAlarm = loadImage("assets/vulture_animation.gif");
   vulture = new Vulture(vulture, vulture2, vultureAlarm, 720, 140);
+  vultureAnimating = false;
+  vStart = 0;
+  vEnd = 300;
+  clickCount = 0;
 
   /// LOAD FONTS
   western = loadFont("assets/Pixel-Western.ttf");
@@ -157,33 +170,98 @@ function draw_clock(obj) {
   //        = 0 if the alarm is currently going off
   //        > 0 --> the number of seconds until alarm should go off
 
-  // load background image
-  background("#70b3b2");
 
-  image(clouds, cloudsX, -10);
-  image(clouds, cloudsX + clouds.width, -10);
-
-  cloudsX -= 0.2;
-
-  // reset cloudsX
-  if (cloudsX < -clouds.width) {
-    cloudsX = 0;
+  // check if seconds is odd or even for idle animaitons
+  if (obj.seconds % 2 == 1) {
+    idleRight = true;
+  } else {
+    idleRight = false;
   }
 
+  let fadeInMap = map(obj.minutes, 0, 59, 0, 255)
+  let fadeOutMap = map(obj.minutes, 0, 59, 255, 0)
+
+  background("110f24")
+
+  if(obj.hours >= 18 || obj.hours <= 6){
+    background("110f24")
+  }else{
+    background("#70b3b2")
+  }
+  
+  if(obj.hours == 18){
+    tint(255, fadeInMap)
+    if(idleRight){
+      star1.draw()
+    }else{
+      star2.draw()
+    }
+    tint(255,255)
+  }else if(obj.hours == 5){
+    tint(255, fadeOutMap)
+    if(idleRight){
+      star1.draw()
+    }else{
+      star2.draw()
+    }    
+    tint(255,255)
+  }else if(obj.hours > 18 || obj.hours < 6){
+    noTint()
+    if(idleRight){
+      star1.draw()
+    }else{
+      star2.draw()
+    }  
+  }
+
+  // if(obj.hours == 6){
+  //   tint(fadeInMap)
+  //   sunrise.draw()
+  //   tint(255,255)
+  // }
+  
+
+  if(obj.hours == 10){
+    tint(255, fadeInMap)
+    // move clouds
+    clouds.move();
+    clouds.draw();
+    noTint()
+  }else if (obj.hours == 15){
+    tint(255, fadeOutMap)
+    // move clouds
+    clouds.move();
+    clouds.draw();
+    noTint()
+  }else if(obj.hours > 10 && obj.hours < 15){
+    clouds.move();
+    clouds.draw();
+  }
+
+  if(obj.hours == 6 || obj.hours == 7){
+    tint(red(sunriseTint), green(sunriseTint), blue(sunriseTint), fadeInMap)
+  }else if(obj.hours > 18 || obj.hours < 6){
+    tint(65, 60, 107)
+  }else if(obj.hours == 5){
+    tint(65, 60, 107, fadeOutMap)
+  }
+  else{
+    noTint()
+  }
+  
   image(bg, 0, 0);
+
 
   ///////////////////////////////////////////////////////
   ///////////////////// TRAIN ///////////////////////////
 
   // train arrives every hour
-  if (obj.minutes == 0) {
+  if (obj.minutes < 5) {
     train.move();
     train.draw(obj.millis);
+    image(steam, train.getX() + 10, train.getY() - 40);
   }
 
-  tint(225, 225);
-  image(steam, train.getX() + 10, train.getY() - 40);
-  tint(255, 255);
 
   if (
     mouseX > train.getX() &&
@@ -217,19 +295,21 @@ function draw_clock(obj) {
   /////////////////// END OF ROCKS //////////////////////
   ///////////////////////////////////////////////////////
 
+  ///////////////////////////////////////////////////////
+  ////////////////// TUMBLEWEED /////////////////////////
+
   angleMode(DEGREES);
   let secondRotation = map(obj.seconds, 0, 30, 0, 360);
   let secondMovement = map(obj.seconds, 0, 59, -50, 960);
-
-  // tint(150,150)
-  // image(TWshadow, secondMovement - 30, 300)
-  // tint(255,255)
 
   push();
   translate(secondMovement, 265);
   rotate(secondRotation);
   image(tumbleweed, 0, 0);
   pop();
+
+  ////////////////// END OF TUMBLEWEED ///////////////////
+  ///////////////////////////////////////////////////////
 
   ///////////////////////////////////////////////////////
   ///////////////////// TREE ////////////////////////////
@@ -249,10 +329,10 @@ function draw_clock(obj) {
   }
 
   // DRAW THE TREE'S SHADOW
-  tint(150, 150);
-  image(treeShadow, 0, 10);
-  image(signShadow, 695, 440);
-  tint(255, 255);
+  // tint(150, 150);
+  // image(treeShadow, 0, 10);
+  // image(signShadow, 695, 440);
+  // tint(255, 255);
 
   // DRAW THE TREE TRUNK
   image(tree, 0, 10);
@@ -272,12 +352,6 @@ function draw_clock(obj) {
       leavesFrontOfTree[i].x + offset,
       leavesFrontOfTree[i].y
     );
-  }
-
-  if (obj.seconds % 2 == 1) {
-    idleRight = true;
-  } else {
-    idleRight = false;
   }
 
   /////////////////// END OF TREE ///////////////////////
@@ -302,7 +376,7 @@ function draw_clock(obj) {
   ) {
     cowboyAnimation = obj.seconds + 3; // Set speed boost to last 3 seconds
     if (cowboyAnimation == 59) {
-      cowboyAnimation -= 59;
+      cowboyAnimation == 0;
     }
   }
 
@@ -348,21 +422,23 @@ function draw_clock(obj) {
     image(signpost, 760, 245);
     image(rock1, 795, 440);
   
-  
     image(rock2, 725, 430);
   
- 
-  
-    // if (mouseX > 700 && mouseX < 725 && mouseY > 300 && mouseY < 325) {
-    //   vulture.animate()
-    // } else {
-    //   vulture.draw(obj.seconds);
+
+    // if(clickCount == 3){
+    //   vultureAnimating = true;
+    //   vStart = obj.millis;
+    //   clickCount = 0;
     // }
 
-    // fill("red");
-    // rect(700, 300, 25, 25);
-
-
+    // if(vultureAnimating){
+    //   vulture.animate();
+    //   if(obj.millis - vStart > vEnd){
+    //     vultureAnimating = false;
+    //   }
+    // }else
+    
+    
     if(obj.seconds_until_alarm < 0 || obj.seconds_until_alarm === undefined){
       // alarm is not set
       vulture.draw(obj.seconds);
@@ -374,8 +450,20 @@ function draw_clock(obj) {
       vulture.animate();
     }
 
+
+
+
   ////////////////// END OF VULTURE //////////////////////
   ///////////////////////////////////////////////////////
+
+  // COLOUR TINT BASED ON THE TIME OF DAY
+
+}
+
+function mousePressed(){
+  if(mouseX > 780 && mouseX < 820 && mouseY > 190 && mouseY < 230){
+    clickCount += 1
+  }
 }
 
 class Train {
@@ -473,5 +561,26 @@ class Vulture {
       image(imgToUse, this.x, this.y);
     }
     pop();
+  }
+}
+
+class Sky {
+  constructor(img, x, y){
+    this.img = img;
+    this.x = x;
+    this.y = y;
+  }
+
+  move(){
+    this.x -= 0.2;
+
+    if (this.x < -960) {
+      this.x = 0;
+    }
+  }
+
+  draw(){
+    image(this.img, this.x, this.y);
+    image(this.img, this.x + this.img.width, this.y);
   }
 }
