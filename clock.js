@@ -5,7 +5,7 @@
 /// SPRITES
 let bg, clouds, cloudsX, tree, treeShadow;
 
-let star1, star2, sunrise, sunriseTint
+let star1, star2, sunrise, sunriseTint, night, nightToSunrise
 
 let trainUP, trainDOWN, train, steam;
 
@@ -50,7 +50,9 @@ function preload() {
   star1 = new Sky(s1, 0, 0)
   star2 = new Sky(s2, 0, 0)
   sunrise = new Sky(b1, 0, 0)
+  night = color(65, 60, 107)
   sunriseTint = color(167, 141, 188)
+  nightToSunrise = colorLerp(night, sunriseTint, 1)
 
   leaf1 = loadImage("assets/leaf1.png");
   leaf2 = loadImage("assets/leaf2.png");
@@ -170,7 +172,6 @@ function draw_clock(obj) {
   //        = 0 if the alarm is currently going off
   //        > 0 --> the number of seconds until alarm should go off
 
-
   // check if seconds is odd or even for idle animaitons
   if (obj.seconds % 2 == 1) {
     idleRight = true;
@@ -181,14 +182,18 @@ function draw_clock(obj) {
   let fadeInMap = map(obj.minutes, 0, 59, 0, 255)
   let fadeOutMap = map(obj.minutes, 0, 59, 255, 0)
 
-  background("110f24")
 
-  if(obj.hours >= 18 || obj.hours <= 6){
-    background("110f24")
-  }else{
-    background("#70b3b2")
-  }
-  
+  // if(obj.hours >= 18 || obj.hours < 6){
+  //   background("110f24")
+  // }else if(obj.hours == 6){
+  //   background("110f24")
+  // }else{
+  //   background("#70b3b2")
+  // }
+  background("#70b3b2")
+
+
+  //////////////////////// draw the sky (and tint it)
   if(obj.hours == 18){
     tint(255, fadeInMap)
     if(idleRight){
@@ -204,8 +209,10 @@ function draw_clock(obj) {
     }else{
       star2.draw()
     }    
+    tint(255, fadeInMap)
+    sunrise.draw()
     tint(255,255)
-  }else if(obj.hours > 18 || obj.hours < 6){
+  }else if(obj.hours > 18 || obj.hours < 5){
     noTint()
     if(idleRight){
       star1.draw()
@@ -214,13 +221,7 @@ function draw_clock(obj) {
     }  
   }
 
-  // if(obj.hours == 6){
-  //   tint(fadeInMap)
-  //   sunrise.draw()
-  //   tint(255,255)
-  // }
-  
-
+///////////////////////// draws clouds (images, being tinted)
   if(obj.hours == 10){
     tint(255, fadeInMap)
     // move clouds
@@ -238,16 +239,22 @@ function draw_clock(obj) {
     clouds.draw();
   }
 
-  if(obj.hours == 6 || obj.hours == 7){
-    tint(red(sunriseTint), green(sunriseTint), blue(sunriseTint), fadeInMap)
-  }else if(obj.hours > 18 || obj.hours < 6){
+
+  ///////////////////////// tint images // all of them
+  if(obj.hours == 5){
+    tint(red(sunriseTint), green(sunriseTint), blue(sunriseTint))
+  }else if(obj.hours > 18 || obj.hours < 5){
     tint(65, 60, 107)
+  //  console.log("ever here")
   }else if(obj.hours == 5){
-    tint(65, 60, 107, fadeOutMap)
+    // tint(65, 60, 107, fadeOutMap)
   }
   else{
+  // console.log("hey no tint?")
     noTint()
   }
+
+  
   
   image(bg, 0, 0);
 
@@ -383,7 +390,7 @@ function draw_clock(obj) {
   let textX = 240;
   let textY = 380;
   fill("black");
-  textFont(blockBlue, 30);
+  textFont(blockBlue, 25);
 
   if (
     (obj.seconds >= cowboyAnimation - 3 && obj.seconds < cowboyAnimation) ||
@@ -456,7 +463,11 @@ function draw_clock(obj) {
   ////////////////// END OF VULTURE //////////////////////
   ///////////////////////////////////////////////////////
 
-  // COLOUR TINT BASED ON THE TIME OF DAY
+  // debug for hour
+
+  fill("black");
+  textFont(blockBlue, 30);
+  text(obj.hours, 900, 485);
 
 }
 
