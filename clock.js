@@ -5,7 +5,12 @@
 /// SPRITES
 let bg, clouds, cloudsX, tree, treeShadow;
 
-let star1, star2, sunrise, sunriseTint, night, nightToSunrise
+let star1, star2
+let skyColour, sunrise, sunriseTint, night, nightToSunrise, morning, sunriseToMorning
+let sixSky, sevenSky, sixToSevenSky, sevenToEightSky, eightToNineSky
+let sunset, sunsetTint, fourSky, fiveSky, fourToFiveSky, fiveToSixSky
+
+
 
 let trainUP, trainDOWN, train, steam;
 
@@ -46,13 +51,25 @@ function preload() {
   s1 = loadImage("assets/star0.png")
   s2 = loadImage("assets/star1.png")
   b1 = loadImage("assets/sunrise.png")
+  b2 = loadImage("assets/sunset.png")
   clouds = new Sky(c, 0, -10);
   star1 = new Sky(s1, 0, 0)
   star2 = new Sky(s2, 0, 0)
   sunrise = new Sky(b1, 0, 0)
+  sunset = new Sky(b2, 0, 0)
+
+  // colours
+  skyColour = color(112, 179, 178)
   night = color(65, 60, 107)
   sunriseTint = color(167, 141, 188)
-  nightToSunrise = colorLerp(night, sunriseTint, 1)
+  morning = color(255,209,189)
+
+  sixSky = color(149, 154, 185)
+  sevenSky = color(130, 166, 181)
+
+  sunsetTint = color(237, 208, 185)
+  fourSky = color(187, 219, 243)
+  fiveSky = color(247,179,184)
 
   leaf1 = loadImage("assets/leaf1.png");
   leaf2 = loadImage("assets/leaf2.png");
@@ -182,6 +199,22 @@ function draw_clock(obj) {
   let fadeInMap = map(obj.minutes, 0, 59, 0, 255)
   let fadeOutMap = map(obj.minutes, 0, 59, 255, 0)
 
+  let amount = map(obj.minutes, 0, 59, 0, 1)
+  nightToSunrise = lerpColor(night, sunriseTint, amount)
+  sunriseToMorning = lerpColor(sunriseTint, morning, amount)
+  morningToDay = lerpColor(morning, skyColour, amount)
+  
+  // sunrise/morning skies
+  sixToSevenSky = lerpColor(sunriseTint, sixSky, amount)
+  sevenToEightSky = lerpColor(sixSky, sevenSky, amount)
+  eightToNineSky = lerpColor(sevenSky, skyColour, amount)
+
+  // evening/sunset skies
+  fourToFiveSky = lerpColor(skyColour, fourSky, amount)
+  fiveToSixSky = lerpColor(fourSky, fiveSky, amount)
+  let sunsetToNight = lerpColor(fiveSky, night, amount)
+  let fiveTint = color(190,158,192)
+
 
   // if(obj.hours >= 18 || obj.hours < 6){
   //   background("110f24")
@@ -190,18 +223,39 @@ function draw_clock(obj) {
   // }else{
   //   background("#70b3b2")
   // }
-  background("#70b3b2")
+  if(obj.hours == 6){
+    background(sixToSevenSky)
+  }else if(obj.hours == 7){
+    background(sevenToEightSky)
+  }else if(obj.hours == 8){
+    background(eightToNineSky)
+  }else if(obj.hours == 16){
+    background(fourToFiveSky)
+  }else if(obj.hours == 17){
+    background(fiveToSixSky)
+  }else if(obj.hours == 18){
+    background(sunsetToNight)
+  }else{
+    background(skyColour)
+  }
 
+  
 
   //////////////////////// draw the sky (and tint it)
   if(obj.hours == 18){
+    tint(255, fadeInMap)
+    sunset.draw()
+    noTint()
+  }else if(obj.hours == 19){
+    tint(255, fadeOutMap)
+    sunset.draw()
     tint(255, fadeInMap)
     if(idleRight){
       star1.draw()
     }else{
       star2.draw()
     }
-    tint(255,255)
+    noTint()
   }else if(obj.hours == 5){
     tint(255, fadeOutMap)
     if(idleRight){
@@ -211,8 +265,8 @@ function draw_clock(obj) {
     }    
     tint(255, fadeInMap)
     sunrise.draw()
-    tint(255,255)
-  }else if(obj.hours > 18 || obj.hours < 5){
+    noTint()
+  }else if(obj.hours > 19 || obj.hours < 5){
     noTint()
     if(idleRight){
       star1.draw()
@@ -239,24 +293,32 @@ function draw_clock(obj) {
     clouds.draw();
   }
 
+  
 
   ///////////////////////// tint images // all of them
-  if(obj.hours == 5){
-    tint(red(sunriseTint), green(sunriseTint), blue(sunriseTint))
-  }else if(obj.hours > 18 || obj.hours < 5){
-    tint(65, 60, 107)
-  //  console.log("ever here")
+  if(obj.hours > 19 || obj.hours < 5){
+    tint(red(night), green(night), blue(night), 255)
   }else if(obj.hours == 5){
-    // tint(65, 60, 107, fadeOutMap)
-  }
-  else{
-  // console.log("hey no tint?")
+    tint(red(nightToSunrise), green(nightToSunrise), blue(nightToSunrise), 255)
+  }else if(obj.hours == 6 || obj.hours == 7){
+    tint(red(sunriseTint), green(sunriseTint), blue(sunriseTint), 255)
+  }else if(obj.hours == 8){
+    tint(red(sunriseToMorning), green(sunriseToMorning), blue(sunriseToMorning), 255)
+  }else if(obj.hours == 17){
+    tint(red(fiveTint), green(fiveTint), blue(fiveTint), 255)
+  }else if(obj.hours == 18){
+    tint(red(sunsetTint), green(sunsetTint), blue(sunsetTint), 255)
+  }else if(obj.hours == 19){
+    tint(red(sunsetToNight), green(sunsetToNight), blue(sunsetToNight), 255)
+  }else{
     noTint()
   }
 
   
   
   image(bg, 0, 0);
+
+  
 
 
   ///////////////////////////////////////////////////////
@@ -336,9 +398,24 @@ function draw_clock(obj) {
   }
 
   // DRAW THE TREE'S SHADOW
+  // fill("#642c0e")
+  
+
   // tint(150, 150);
   // image(treeShadow, 0, 10);
   // image(signShadow, 695, 440);
+  // tree shadow
+
+  fill(60,23,5,150)
+  noStroke()
+  rect(70, 455, 200, 5)
+  rect(35, 460, 285, 5)
+  rect(55, 465, 265, 5)
+  rect(100, 470, 190, 5)
+
+  rect(710, 440, 165, 5)
+  rect(695, 445, 200, 5)
+  rect(725, 450, 160, 5)
   // tint(255, 255);
 
   // DRAW THE TREE TRUNK
@@ -468,6 +545,8 @@ function draw_clock(obj) {
   fill("black");
   textFont(blockBlue, 30);
   text(obj.hours, 900, 485);
+
+
 
 }
 
