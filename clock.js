@@ -87,7 +87,6 @@ function preload() {
   bushB2 = loadImage("assets/bushB2.png");
 
   tumbleweed = loadImage("assets/tumbleweedB.png");
-  TWshadow = loadImage("assets/tw shadow.png");
 
   steam = loadImage("assets/steamAnimation.gif");
   trainUP = loadImage("assets/trainUP.png");
@@ -105,14 +104,8 @@ function preload() {
   
   vultureAlarm = loadImage("assets/vulture_animation.gif");
   vulture = new Vulture(vulture, vulture2, vultureAlarm, 720, 140);
-  vultureAnimating = false;
-  vStart = 0;
-  vEnd = 300;
-  clickCount = 0;
 
-  /// LOAD FONTS
-  western = loadFont("assets/Pixel-Western.ttf");
-  yoster = loadFont("assets/yoster.ttf");
+  /// LOAD FONT
   blockBlue = loadFont("assets/BlockBlueprint.ttf");
 
   /// SET UP LEAVES
@@ -189,6 +182,9 @@ function draw_clock(obj) {
   //        = 0 if the alarm is currently going off
   //        > 0 --> the number of seconds until alarm should go off
 
+  
+
+
   // check if seconds is odd or even for idle animaitons
   if (obj.seconds % 2 == 1) {
     idleRight = true;
@@ -213,16 +209,7 @@ function draw_clock(obj) {
   fourToFiveSky = lerpColor(skyColour, fourSky, amount)
   fiveToSixSky = lerpColor(fourSky, fiveSky, amount)
   let sunsetToNight = lerpColor(fiveSky, night, amount)
-  let fiveTint = color(190,158,192)
 
-
-  // if(obj.hours >= 18 || obj.hours < 6){
-  //   background("110f24")
-  // }else if(obj.hours == 6){
-  //   background("110f24")
-  // }else{
-  //   background("#70b3b2")
-  // }
   if(obj.hours == 6){
     background(sixToSevenSky)
   }else if(obj.hours == 7){
@@ -304,8 +291,6 @@ function draw_clock(obj) {
     tint(red(sunriseTint), green(sunriseTint), blue(sunriseTint), 255)
   }else if(obj.hours == 8){
     tint(red(sunriseToMorning), green(sunriseToMorning), blue(sunriseToMorning), 255)
-  }else if(obj.hours == 17){
-    tint(red(fiveTint), green(fiveTint), blue(fiveTint), 255)
   }else if(obj.hours == 18){
     tint(red(sunsetTint), green(sunsetTint), blue(sunsetTint), 255)
   }else if(obj.hours == 19){
@@ -314,8 +299,7 @@ function draw_clock(obj) {
     noTint()
   }
 
-  
-  
+  // draw the background
   image(bg, 0, 0);
 
   
@@ -357,8 +341,6 @@ function draw_clock(obj) {
     image(bushB2, 60, 405);
   }
 
-  // image(bushA1, 80, 395)
-
   image(rock4, 75, 440);
 
   /////////////////// END OF ROCKS //////////////////////
@@ -398,25 +380,8 @@ function draw_clock(obj) {
   }
 
   // DRAW THE TREE'S SHADOW
-  // fill("#642c0e")
-  
-
-  // tint(150, 150);
-  // image(treeShadow, 0, 10);
-  // image(signShadow, 695, 440);
-  // tree shadow
-
-  fill(60,23,5,150)
-  noStroke()
-  rect(70, 455, 200, 5)
-  rect(35, 460, 285, 5)
-  rect(55, 465, 265, 5)
-  rect(100, 470, 190, 5)
-
-  rect(710, 440, 165, 5)
-  rect(695, 445, 200, 5)
-  rect(725, 450, 160, 5)
-  // tint(255, 255);
+  image(treeShadow, 0, 10);
+  image(signShadow, 695, 440);
 
   // DRAW THE TREE TRUNK
   image(tree, 0, 10);
@@ -458,7 +423,7 @@ function draw_clock(obj) {
     mouseY > yMin &&
     mouseY < yMax
   ) {
-    cowboyAnimation = obj.seconds + 3; // Set speed boost to last 3 seconds
+    cowboyAnimation = obj.seconds + 3;
     if (cowboyAnimation == 59) {
       cowboyAnimation == 0;
     }
@@ -508,21 +473,6 @@ function draw_clock(obj) {
   
     image(rock2, 725, 430);
   
-
-    // if(clickCount == 3){
-    //   vultureAnimating = true;
-    //   vStart = obj.millis;
-    //   clickCount = 0;
-    // }
-
-    // if(vultureAnimating){
-    //   vulture.animate();
-    //   if(obj.millis - vStart > vEnd){
-    //     vultureAnimating = false;
-    //   }
-    // }else
-    
-    
     if(obj.seconds_until_alarm < 0 || obj.seconds_until_alarm === undefined){
       // alarm is not set
       vulture.draw(obj.seconds);
@@ -540,14 +490,7 @@ function draw_clock(obj) {
   ////////////////// END OF VULTURE //////////////////////
   ///////////////////////////////////////////////////////
 
-  // debug for hour
-
-  fill("black");
-  textFont(blockBlue, 30);
-  text(obj.hours, 900, 485);
-
-
-
+  
 }
 
 function mousePressed(){
