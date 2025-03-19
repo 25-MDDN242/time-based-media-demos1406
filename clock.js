@@ -432,6 +432,9 @@ function draw_clock(obj) {
   let textX = 240;
   let textY = 380;
   fill("black");
+  
+  
+
   textFont(blockBlue, 25);
 
   if (
@@ -448,7 +451,16 @@ function draw_clock(obj) {
     } else if (obj.hours == 12 && obj.minutes < 5) {
       text("Well now, reckon it's high noon", textX, textY);
     } else {
-      text("ZzzZzzz...", textX, textY);
+      textFont(blockBlue, 30);
+      if(idleRight){
+        text("Z", 230, 385)
+        text("z", 245, 375)
+        text("Z", 260, 360)
+      }else{
+        text("z", 230, 385)
+        text("Z", 250, 375)
+        text("z", 270, 360)
+      }
     }
   } else {
     cowboy.draw(obj.seconds);
