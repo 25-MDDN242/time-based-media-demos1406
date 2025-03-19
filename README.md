@@ -27,3 +27,5 @@ This project taught me much about pixel art, a stark difference from the art sty
 Several ambitious ideas had to be abandoned due to limitations within p5’s framework. For example, I intended to include an interactive element where hitting the vulture three times triggered the vulture to squawk in annoyance, but p5's rapid iteration structure prevented its feasible implementation.
 
 The day-night cycle was my final addition, and I'm particularly pleased with the outcome. Drawing each sprite directly within `draw_clock()` would have simplified this process significantly, allowing straightforward colour changes with the `fill()` function. Instead, I wrestled with the more complex `tint()` function, eventually reaching a satisfying result. Colour theory was not an expected learning experience from this project.
+
+> It should be noted that while using debug, breaks can be common. The core functions will not break but regular reloading is reccomended.
