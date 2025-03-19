@@ -12,7 +12,7 @@ My primary intention was to make a clock that had inspiration drawn from Mark Fe
 ### External Influence & Inspiration
 
 -   [Living Worlds](http://www.effectgames.com/demos/worlds/) by Mark Ferrari
--   Pixel art & animations: Inspired by retro video games, such as Oregon Trail, and contemporary artists on [itch.io](https://itch.io/game-assets/tag-pixel-art/tag-wild-west) or [Pinterest](https://pin.it/7Ei8Hfbey)
+-   Pixel art & animations: Inspired by retro video games, such as Oregon Trail, and artists on [itch.io](https://itch.io/game-assets/tag-pixel-art/tag-wild-west) or [Pinterest](https://pin.it/7Ei8Hfbey)
 
 ### Design Process & Journal
 
