@@ -302,9 +302,6 @@ function draw_clock(obj) {
   // draw the background
   image(bg, 0, 0);
 
-  
-
-
   ///////////////////////////////////////////////////////
   ///////////////////// TRAIN ///////////////////////////
 
@@ -416,13 +413,7 @@ function draw_clock(obj) {
     yMax = 460;
 
   // DRAW THE COWBOY
-  if (
-    mouseIsPressed &&
-    mouseX > xMin &&
-    mouseX < xMax &&
-    mouseY > yMin &&
-    mouseY < yMax
-  ) {
+  if (mouseIsPressed && mouseX > xMin & mouseX < xMax && mouseY > yMin && mouseY < yMax) {
     cowboyAnimation = obj.seconds + 3;
     if (cowboyAnimation == 59) {
       cowboyAnimation == 0;
@@ -432,9 +423,6 @@ function draw_clock(obj) {
   let textX = 240;
   let textY = 380;
   fill("black");
-  
-  
-
   textFont(blockBlue, 25);
 
   if (
@@ -496,9 +484,6 @@ function draw_clock(obj) {
       vulture.animate();
     }
 
-
-
-
   ////////////////// END OF VULTURE //////////////////////
   ///////////////////////////////////////////////////////
 
@@ -534,11 +519,11 @@ class Train {
 
   draw(currentMillis) {
     push();
-    let imgToUse = currentMillis % 1000 < 500 ? this.img1 : this.img2;
-    if (imgToUse == this.img1) {
-      image(imgToUse, this.x, this.y);
-    } else if (imgToUse == this.img2) {
+    let imgToUse = currentMillis % 1000 < 500 ? this.img2 : this.img1;
+    if (imgToUse == this.img2) {
       image(imgToUse, this.x, this.y + 5);
+    } else if (imgToUse == this.img1) {
+      image(imgToUse, this.x, this.y);
     }
     pop();
   }

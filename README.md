@@ -1,5 +1,4 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/M3ipj5sV)
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=18378480&assignment_repo_type=AssignmentRepo)
+[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/M3ipj5sV) [![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=18378480&assignment_repo_type=AssignmentRepo)
 
 # New Austin Trail
 
@@ -28,4 +27,6 @@ Several ambitious ideas had to be abandoned due to limitations within p5’s fra
 
 The day-night cycle was my final addition, and I'm particularly pleased with the outcome. Drawing each sprite directly within `draw_clock()` would have simplified this process significantly, allowing straightforward colour changes with the `fill()` function. Instead, I wrestled with the more complex `tint()` function, eventually reaching a satisfying result. Colour theory was not an expected learning experience from this project.
 
-> It should be noted that while using debug, breaks can be common. The core functions will not break but regular reloading is reccomended.
+> It should be noted that while using debug, breaks can be common. The core functions will not break but regular reloading is recommended.
+>
+> While it is not necessary for full enjoyment, all of my `tint()` gradients are contained within the hour. I recommend changing the minutes slider in debug while in the sunrise/sunset hours.
